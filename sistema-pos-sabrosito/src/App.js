@@ -94,6 +94,24 @@ function App() {
       window.print();
     }, 500);
   };
+  const generarTextoTicket = () => {
+  let texto = "SABROSITO POS\n";
+  texto += "----------------------\n";
+  texto += `Fecha: ${new Date().toLocaleString()}\n`;
+  texto += `Tipo: ${tipoPedido === "mesa" ? `Mesa ${numeroMesa}` : "Para llevar"}\n`;
+  texto += "----------------------\n";
+  pedido.forEach((item) => {
+    texto += `${item.nombre} x ${item.cantidad} = Bs ${item.precio * item.cantidad}\n`;
+  });
+  texto += "----------------------\n";
+  texto += `TOTAL: Bs ${total}\n`;
+  texto += "¡Gracias por su compra!\n";
+  return texto;
+};
+
+const codificarParaRawBT = (texto) => {
+  return encodeURIComponent(texto);
+};
 
   // === ESTILOS RESPONSIVOS PARA MÓVIL ===
   const contenedor = {
@@ -107,7 +125,7 @@ function App() {
   const botonCategoria = (activa) => ({
     flex: "1 1 45%",
     padding: "10px",
-    backgroundColor: activa ? "#4CAF50" : "#eee",
+    backgroundColor: activa ? "#462510ff" : "#eee",
     color: activa ? "white" : "black",
     border: "none",
     borderRadius: "8px",
@@ -132,7 +150,7 @@ function App() {
   const botonConfirmar = {
     width: "100%",
     padding: "14px",
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#582821ff",
     color: "white",
     fontSize: "18px",
     border: "none",
@@ -151,7 +169,7 @@ function App() {
               marginBottom: "20px",
             }}
           >
-            🍗 Sistema Sabrosito POS
+            🍗🍟 Sistema Sabrosito 
           </h1>
 
           <div
@@ -218,7 +236,7 @@ function App() {
                 <h2
                   style={{
                     textAlign: "center",
-                    backgroundColor: "#4CAF50",
+                    backgroundColor: "#672626e8",
                     color: "white",
                     borderRadius: "6px",
                     padding: "5px",
@@ -301,6 +319,21 @@ function App() {
           <hr />
           <h3>Total: Bs {total}</h3>
           <p>¡Gracias por su compra!</p>
+          <a
+  href={`rawbt:print?text=${codificarParaRawBT(generarTextoTicket())}`}
+  style={{
+    display: "inline-block",
+    marginTop: "20px",
+    padding: "12px",
+    backgroundColor: "#6c2927ff",
+    color: "white",
+    borderRadius: "8px",
+    textDecoration: "none",
+    fontSize: "18px",
+  }}
+>
+  Imprimir ticket con RawBT
+</a>
         </div>
       )}
     </div>
