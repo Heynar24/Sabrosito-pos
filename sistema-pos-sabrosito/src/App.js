@@ -149,13 +149,8 @@ export default function App() {
 
     setMostrarTicket(true);
 
-    setTimeout(() => {
-      try {
-        window.print();
-      } catch (e) {
-        console.warn("Impresión no disponible:", e);
-      }
-    }, 500);
+// Ya no imprimimos automáticamente
+  console.log("✅ Pedido guardado. Esperando que el usuario imprima con RAWBT.");
 
     setTimeout(() => {
       setPedido([]);
@@ -328,6 +323,27 @@ export default function App() {
           >
             Imprimir ticket con RawBT
           </a>
+          <button
+  onClick={() => {
+    setPedido([]);
+    setNumeroMesa("");
+    setTipoPedido("mesa");
+    setMostrarTicket(false);
+    setMensajeGuardado("Pedido enviado e impresora activada.");
+  }}
+  style={{
+    marginTop: "20px",
+    padding: "12px",
+    backgroundColor: "#444",
+    color: "white",
+    borderRadius: "8px",
+    fontSize: "18px",
+    border: "none",
+    width: "100%",
+  }}
+>
+  Volver al menú
+  </button>
         </div>
       )}
     </div>
