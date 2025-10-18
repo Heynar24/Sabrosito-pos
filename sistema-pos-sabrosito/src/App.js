@@ -1,6 +1,10 @@
-import { useState } from "react";
+// App.jsx
+import React, { useState, useEffect } from "react";
+import { supabase } from "./supabase";
 
-function App() {
+const esAndroid = () => /Android/i.test(navigator.userAgent || "");
+
+export default function App() {
   const categorias = [
     {
       nombre: "Pollo a la leña",
@@ -60,60 +64,108 @@ function App() {
   const [tipoPedido, setTipoPedido] = useState("mesa");
   const [numeroMesa, setNumeroMesa] = useState("");
   const [mostrarTicket, setMostrarTicket] = useState(false);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(
-    categorias[0].nombre
-  );
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(categorias[0].nombre);
+  const [guardando, setGuardando] = useState(false);
+  const [mensajeGuardado, setMensajeGuardado] = useState("");
+
+  useEffect(() => {
+    if (!esAndroid()) {
+      console.warn("Diseñado para Android — algunas funciones pueden variar en escritorio.");
+    }
+  }, []);
 
   const agregarProducto = (producto) => {
     const existe = pedido.find((item) => item.id === producto.id);
     if (existe) {
-      setPedido(
-        pedido.map((item) =>
-          item.id === producto.id
-            ? { ...item, cantidad: item.cantidad + 1 }
-            : item
+      setPedido((prev) =>
+        prev.map((item) =>
+          item.id === producto.id ? { ...item, cantidad: item.cantidad + 1 } : item
         )
       );
     } else {
-      setPedido([...pedido, { ...producto, cantidad: 1 }]);
+      setPedido((prev) => [...prev, { ...producto, cantidad: 1 }]);
     }
   };
 
   const eliminarProducto = (id) => {
-    setPedido(pedido.filter((item) => item.id !== id));
+    setPedido((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const total = pedido.reduce(
-    (sum, item) => sum + item.precio * item.cantidad,
-    0
-  );
+  const total = pedido.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
 
-  const confirmarPedido = () => {
-    setMostrarTicket(true);
-    setTimeout(() => {
-      window.print();
-    }, 500);
+  const guardarPedidoEnSupabase = async () => {
+    if (pedido.length === 0) {
+      setMensajeGuardado("⚠️ El pedido está vacío. Añade productos antes de confirmar.");
+      return false;
+    }
+    setGuardando(true);
+    setMensajeGuardado("Guardando pedido...");
+
+    try {
+      const { data, error } = await supabase.from("pedidos").insert([
+        {
+          tipo: tipoPedido,
+          mesa: tipoPedido === "mesa" ? numeroMesa || null : null,
+          productos: pedido,
+          total: total,
+          fecha: new Date().toISOString(),
+        },
+      ]);
+
+      if (error) throw error;
+
+      console.log("✅ Pedido guardado en Supabase:", data);
+      setMensajeGuardado("✅ Pedido guardado correctamente.");
+      setGuardando(false);
+      return true;
+    } catch (error) {
+      console.error("❌ Error guardando en Supabase:", error.message);
+      setMensajeGuardado("❌ Error al guardar el pedido. Revisa la consola.");
+      setGuardando(false);
+      return false;
+    }
   };
+
   const generarTextoTicket = () => {
-  let texto = "SABROSITO POS\n";
-  texto += "----------------------\n";
-  texto += `Fecha: ${new Date().toLocaleString()}\n`;
-  texto += `Tipo: ${tipoPedido === "mesa" ? `Mesa ${numeroMesa}` : "Para llevar"}\n`;
-  texto += "----------------------\n";
-  pedido.forEach((item) => {
-    texto += `${item.nombre} x ${item.cantidad} = Bs ${item.precio * item.cantidad}\n`;
-  });
-  texto += "----------------------\n";
-  texto += `TOTAL: Bs ${total}\n`;
-  texto += "¡Gracias por su compra!\n";
-  return texto;
-};
+    let texto = "SABROSITO\n";
+    texto += "----------------------\n";
+    texto += `Fecha: ${new Date().toLocaleString()}\n`;
+    texto += `Tipo: ${tipoPedido === "mesa" ? `Mesa ${numeroMesa || "-"}` : "Para llevar"}\n`;
+    texto += "----------------------\n";
+    pedido.forEach((item) => {
+      texto += `${item.nombre} x${item.cantidad} = Bs ${item.precio * item.cantidad}\n`;
+    });
+    texto += "----------------------\n";
+    texto += `TOTAL: Bs ${total}\n`;
+    texto += "¡Gracias por su compra!\n";
+    return texto;
+  };
 
-const codificarParaRawBT = (texto) => {
-  return encodeURIComponent(texto);
-};
+  const codificarParaRawBT = (texto) => encodeURIComponent(texto);
 
-  // === ESTILOS RESPONSIVOS PARA MÓVIL ===
+  const confirmarPedido = async () => {
+    const ok = await guardarPedidoEnSupabase(); 
+    if (!ok) return;
+
+    setMostrarTicket(true);
+
+    setTimeout(() => {
+      try {
+        window.print();
+      } catch (e) {
+        console.warn("Impresión no disponible:", e);
+      }
+    }, 500);
+
+    setTimeout(() => {
+      setPedido([]);
+      setNumeroMesa("");
+      setTipoPedido("mesa");
+      setMostrarTicket(false);
+      setMensajeGuardado("Pedido enviado e impresora activada.");
+    }, 2500);
+  };
+
   const contenedor = {
     padding: "10px",
     maxWidth: "480px",
@@ -156,31 +208,19 @@ const codificarParaRawBT = (texto) => {
     border: "none",
     borderRadius: "10px",
     marginTop: "20px",
+    cursor: guardando ? "not-allowed" : "pointer",
+    opacity: guardando ? 0.7 : 1,
   };
 
   return (
     <div style={contenedor}>
       {!mostrarTicket ? (
         <div>
-          <h1
-            style={{
-              textAlign: "center",
-              fontSize: "22px",
-              marginBottom: "20px",
-            }}
-          >
-            🍗🍟 Sistema Sabrosito 
+          <h1 style={{ textAlign: "center", fontSize: "22px", marginBottom: "20px" }}>
+            🍗🍟 Sistema Sabrosito
           </h1>
 
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "8px",
-              marginBottom: "20px",
-              justifyContent: "center",
-            }}
-          >
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "20px", justifyContent: "center" }}>
             {categorias.map((cat) => (
               <button
                 key={cat.nombre}
@@ -197,12 +237,7 @@ const codificarParaRawBT = (texto) => {
             <select
               value={tipoPedido}
               onChange={(e) => setTipoPedido(e.target.value)}
-              style={{
-                padding: "8px",
-                marginLeft: "10px",
-                borderRadius: "6px",
-                border: "1px solid #ccc",
-              }}
+              style={{ padding: "8px", marginLeft: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
             >
               <option value="mesa">En mesa</option>
               <option value="llevar">Para llevar</option>
@@ -215,42 +250,21 @@ const codificarParaRawBT = (texto) => {
                   type="text"
                   value={numeroMesa}
                   onChange={(e) => setNumeroMesa(e.target.value)}
-                  style={{
-                    marginLeft: "8px",
-                    padding: "6px",
-                    borderRadius: "6px",
-                    border: "1px solid #ccc",
-                    width: "80px",
-                    textAlign: "center",
-                  }}
+                  style={{ marginLeft: "8px", padding: "6px", borderRadius: "6px", border: "1px solid #ccc", width: "80px", textAlign: "center" }}
                 />
               </div>
             )}
           </div>
 
-          {/* PRODUCTOS */}
           {categorias
             .filter((cat) => cat.nombre === categoriaSeleccionada)
             .map((categoria) => (
               <div key={categoria.nombre}>
-                <h2
-                  style={{
-                    textAlign: "center",
-                    backgroundColor: "#672626e8",
-                    color: "white",
-                    borderRadius: "6px",
-                    padding: "5px",
-                    fontSize: "18px",
-                  }}
-                >
+                <h2 style={{ textAlign: "center", backgroundColor: "#672626e8", color: "white", borderRadius: "6px", padding: "5px", fontSize: "18px" }}>
                   {categoria.nombre}
                 </h2>
                 {categoria.productos.map((producto) => (
-                  <button
-                    key={producto.id}
-                    onClick={() => agregarProducto(producto)}
-                    style={botonProducto}
-                  >
+                  <button key={producto.id} onClick={() => agregarProducto(producto)} style={botonProducto}>
                     <span>{producto.nombre}</span>
                     <strong>Bs {producto.precio}</strong>
                   </button>
@@ -258,35 +272,14 @@ const codificarParaRawBT = (texto) => {
               </div>
             ))}
 
-          {/* PEDIDO */}
-          <h2 style={{ marginTop: "25px", textAlign: "center" }}>
-            🧾 Pedido actual
-          </h2>
+          <h2 style={{ marginTop: "25px", textAlign: "center" }}>🧾 Pedido actual</h2>
           <ul style={{ listStyle: "none", padding: "0" }}>
             {pedido.map((item) => (
-              <li
-                key={item.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "6px 0",
-                  borderBottom: "1px solid #eee",
-                }}
-              >
-                <span>
-                  {item.nombre} x {item.cantidad}
-                </span>
+              <li key={item.id} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #eee" }}>
+                <span>{item.nombre} x {item.cantidad}</span>
                 <span>
                   Bs {item.precio * item.cantidad}{" "}
-                  <button
-                    onClick={() => eliminarProducto(item.id)}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: "red",
-                      fontSize: "16px",
-                    }}
-                  >
+                  <button onClick={() => eliminarProducto(item.id)} style={{ background: "none", border: "none", color: "red", fontSize: "16px" }}>
                     ✕
                   </button>
                 </span>
@@ -296,48 +289,47 @@ const codificarParaRawBT = (texto) => {
 
           <h3 style={{ textAlign: "center" }}>Total: Bs {total}</h3>
 
-          <button onClick={confirmarPedido} style={botonConfirmar}>
-            Confirmar e imprimir ticket
+          {mensajeGuardado && <p style={{ textAlign: "center" }}>{mensajeGuardado}</p>}
+
+          <button onClick={confirmarPedido} style={botonConfirmar} disabled={guardando}>
+            {guardando ? "Guardando..." : "Confirmar e imprimir ticket"}
           </button>
+
         </div>
       ) : (
         <div style={{ fontFamily: "monospace", textAlign: "center" }}>
           <h2>🧾 Ticket de pedido</h2>
           <p>Fecha: {new Date().toLocaleString()}</p>
-          <p>
-            Tipo: {tipoPedido === "mesa" ? `Mesa ${numeroMesa}` : "Para llevar"}
-          </p>
+          <p>Tipo: {tipoPedido === "mesa" ? `Mesa ${numeroMesa || "-"}` : "Para llevar"}</p>
           <hr />
           <ul style={{ listStyle: "none", padding: 0 }}>
             {pedido.map((item) => (
               <li key={item.id}>
-                {item.nombre} x {item.cantidad} = Bs{" "}
-                {item.precio * item.cantidad}
+                {item.nombre} x {item.cantidad} = Bs {item.precio * item.cantidad}
               </li>
             ))}
           </ul>
           <hr />
           <h3>Total: Bs {total}</h3>
           <p>¡Gracias por su compra!</p>
+
           <a
-  href={`rawbt:print?text=${codificarParaRawBT(generarTextoTicket())}`}
-  style={{
-    display: "inline-block",
-    marginTop: "20px",
-    padding: "12px",
-    backgroundColor: "#6c2927ff",
-    color: "white",
-    borderRadius: "8px",
-    textDecoration: "none",
-    fontSize: "18px",
-  }}
->
-  Imprimir ticket con RawBT
-</a>
+            href={`rawbt:print?text=${codificarParaRawBT(generarTextoTicket())}`}
+            style={{
+              display: "inline-block",
+              marginTop: "20px",
+              padding: "12px",
+              backgroundColor: "#6c2927ff",
+              color: "white",
+              borderRadius: "8px",
+              textDecoration: "none",
+              fontSize: "18px",
+            }}
+          >
+            Imprimir ticket con RawBT
+          </a>
         </div>
       )}
     </div>
   );
 }
-
-export default App;
