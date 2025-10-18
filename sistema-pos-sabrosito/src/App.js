@@ -138,9 +138,8 @@ export default function App() {
     texto += "----------------------\n";
     texto += `TOTAL: Bs ${total}\n`;
     texto += "¡Gracias por su compra!\n";
-
-    const separador = "\n\n--------- COPIA ---------\n\n";
-    return texto + separador + texto;
+    
+    return texto;
   };
 
   const codificarParaRawBT = (texto) => encodeURIComponent(texto);
