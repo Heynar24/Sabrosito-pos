@@ -138,7 +138,7 @@ export default function App() {
     texto += "----------------------\n";
     texto += `TOTAL: Bs ${total}\n`;
     texto += "¡Gracias por su compra!\n";
-    
+
     return texto;
   };
 
@@ -310,7 +310,7 @@ export default function App() {
           <p>¡Gracias por su compra!</p>
 
           <a
-            href={`rawbt:print?text=${codificarParaRawBT(generarTextoTicket())}`}
+            href={`rawbt:print?text=${codificarParaRawBT(generarTextoTicket())}&mode=text`}
             style={{
               display: "inline-block",
               marginTop: "20px",
