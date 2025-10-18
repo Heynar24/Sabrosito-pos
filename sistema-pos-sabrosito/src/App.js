@@ -127,7 +127,7 @@ export default function App() {
   };
 
   const generarTextoTicket = () => {
-    let texto = "SABROSITO\n";
+    let texto = "POLLOS SABROSITO\n";
     texto += "----------------------\n";
     texto += `Fecha: ${new Date().toLocaleString()}\n`;
     texto += `Tipo: ${tipoPedido === "mesa" ? `Mesa ${numeroMesa || "-"}` : "Para llevar"}\n`;
@@ -138,7 +138,9 @@ export default function App() {
     texto += "----------------------\n";
     texto += `TOTAL: Bs ${total}\n`;
     texto += "¡Gracias por su compra!\n";
-    return texto;
+
+    const separador = "\n\n--------- COPIA ---------\n\n";
+    return texto + separador + texto;
   };
 
   const codificarParaRawBT = (texto) => encodeURIComponent(texto);
