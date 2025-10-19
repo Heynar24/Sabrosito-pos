@@ -11,9 +11,9 @@ export default function App() {
       productos: [
         { id: 1, nombre: "Económico con fideo", precio: 18 },
         { id: 2, nombre: "Económico sin fideo", precio: 16 },
-        { id: 3, nombre: "Cuarto pierna", precio: 28 },
-        { id: 4, nombre: "Cuarto pecho", precio: 30 },
-        { id: 5, nombre: "Medio pollo", precio: 50 },
+        { id: 3, nombre: "1/4 pierna", precio: 28 },
+        { id: 4, nombre: "1/4 pecho", precio: 30 },
+        { id: 5, nombre: "1/2 pollo", precio: 50 },
         { id: 6, nombre: "Pollo entero", precio: 100 },
       ],
     },
@@ -22,7 +22,8 @@ export default function App() {
       productos: [
         { id: 7, nombre: "Super económico", precio: 10 },
         { id: 8, nombre: "Económico", precio: 16 },
-        { id: 9, nombre: "Cuarto", precio: 28 },
+        { id: 9, nombre: "1/4", precio: 28 },
+        { id: 10, nombre: "1/2", precio: 50 }
       ],
     },
     {
@@ -92,6 +93,8 @@ export default function App() {
   };
 
   const total = pedido.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+  const idsSodas = categorias.find(cat => cat.nombre === "Sodas")?.productos.map(p => p.id) || [];
+  const soloSodas = pedido.length > 0 && pedido.every(item => idsSodas.includes(item.id));
 
   const guardarPedidoEnSupabase = async () => {
     if (pedido.length === 0) {
@@ -127,7 +130,9 @@ export default function App() {
   };
 
   const generarTextoTicket = () => {
-    let texto = "POLLOS SABROSITO\n";
+    let texto = "\x1B\x21\x30"; // Formato grande
+    texto += "POLLOS SABROSITO\n";
+    texto += "\x1B\x21\x00" //vuelve al texto normal
     texto += "----------------------\n";
     texto += `Fecha: ${new Date().toLocaleString()}\n`;
     texto += `Tipo: ${tipoPedido === "mesa" ? `Mesa ${numeroMesa || "-"}` : "Para llevar"}\n`;
@@ -310,7 +315,10 @@ export default function App() {
           <p>¡Gracias por su compra!</p>
 
           <a
-            href={`rawbt:print?text=${codificarParaRawBT(generarTextoTicket())}&mode=text`}
+            href={
+              `rawbt:print?text=${codificarParaRawBT(generarTextoTicket())}`+
+              (soloSodas ? "" : `\n\n${codificarParaRawBT(generarTextoTicket())}` )
+            }
             style={{
               display: "inline-block",
               marginTop: "20px",
