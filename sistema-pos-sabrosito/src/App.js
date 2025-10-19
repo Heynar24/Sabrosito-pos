@@ -160,7 +160,7 @@ export default function App() {
     texto += "\x1B\x21\x00"; //vuelve al texto normal
     texto += "\x1B\x61\x00"; //aliniamiento a la izquierda
     texto += "telf. 76664345\n";
-    texto += "Doblevia La Guardia,km20\n";
+    texto += "Doble via La Guardia,km20\n";
     texto += "----------------------\n";
     texto += `Fecha: ${new Date().toLocaleString()}\n`;
     texto += `Tipo: ${tipoPedido === "mesa" ? `Mesa ${numeroMesa || "-"}` : "Para llevar"}\n`;
