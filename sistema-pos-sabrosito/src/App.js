@@ -129,7 +129,7 @@ export default function App() {
 
   const generarTextoTicket = () => {
     let texto = "\x1B\x45\x01"; // Negrilla ON
-    texto += "\x1B\x21\x30"; // Formato grande
+    texto += "\x1B\x21\x10"; // Formato grande
     texto += "POLLOS EL SABROSITO\n";
     texto += "\x1B\x45\x00"; // Negrilla OFF
     texto += "\x1B\x21\x00"; //vuelve al texto normal
@@ -315,7 +315,7 @@ export default function App() {
           <p>¡Gracias por su compra!</p>
 
           <a
-            href={`rawbt:print2esc?text=${codificarParaRawBT(generarTextoTicket())}`}
+            href={`rawbt:print?text=${codificarParaRawBT(generarTextoTicket())}`}
             style={{
               display: "inline-block",
               marginTop: "20px",
