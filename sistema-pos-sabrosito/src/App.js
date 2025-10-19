@@ -315,7 +315,7 @@ export default function App() {
           <p>¡Gracias por su compra!</p>
 
           <a
-            href={`rawbt:print?text=${codificarParaRawBT(generarTextoTicket())}`}
+            href={`rawbt:print2esc?text=${codificarParaRawBT(generarTextoTicket())}`}
             style={{
               display: "inline-block",
               marginTop: "20px",
