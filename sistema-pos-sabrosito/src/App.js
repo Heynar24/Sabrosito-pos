@@ -128,9 +128,11 @@ export default function App() {
   };
 
   const generarTextoTicket = () => {
-    let texto = "\x1B\x21\x30"; // Formato grande
-    texto += "POLLOS SABROSITO\n";
-    texto += "\x1B\x21\x00" //vuelve al texto normal
+    let texto = "\x1B\x45\x01"; // Negrilla ON
+    texto += "\x1B\x21\x30"; // Formato grande
+    texto += "POLLOS EL SABROSITO\n";
+    texto += "\x1B\x45\x00"; // Negrilla OFF
+    texto += "\x1B\x21\x00"; //vuelve al texto normal
     texto += "----------------------\n";
     texto += `Fecha: ${new Date().toLocaleString()}\n`;
     texto += `Tipo: ${tipoPedido === "mesa" ? `Mesa ${numeroMesa || "-"}` : "Para llevar"}\n`;
