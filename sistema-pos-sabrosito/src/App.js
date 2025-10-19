@@ -128,11 +128,6 @@ export default function App() {
   };
 
   const [numeroPedidoLocal, setNumeroPedidoLocal] = useState(null);
-
-  let numeroPedido = parseInt(localStorage.getItem("numeroPedido") || "1");
-  setNumeroPedidoLocal(numeroPedido); // lo usamos en el ticket
-  localStorage.setItem("numeroPedido", numeroPedido + 1); // lo subimos para el siguiente
-
   const generarTextoTicket = () => {
     let texto = "\x1B\x61\x01"; // centrar
     texto += "\x1B\x46\x01"; // Negrilla ON
@@ -162,6 +157,9 @@ export default function App() {
     const ok = await guardarPedidoEnSupabase(); 
     if (!ok) return;
 
+    let numeroPedido = parseInt(localStorage.getItem("numeroPedido") || "1");
+    setNumeroPedidoLocal(numeroPedido); // lo usamos en el ticket
+    localStorage.setItem("numeroPedido", numeroPedido + 1); // lo subimos para el siguiente
     setMostrarTicket(true);
 
 // Ya no imprimimos automáticamente
