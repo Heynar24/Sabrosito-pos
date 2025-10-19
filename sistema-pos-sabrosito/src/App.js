@@ -129,7 +129,7 @@ export default function App() {
 
   const generarTextoTicket = () => {
     let texto = "\x1B\x61\x01"; // centrar 
-    texto +=  "\x1B\x45\x01"; // Negrilla ON
+    texto +=  "\x1B\x46\x01"; // Negrilla ON
     texto += "\x1B\x21\x27"; // Formato grande
     texto += "POLLOS EL SABROSITO\n";
     texto += "\x1B\x45\x00"; // Negrilla OFF
