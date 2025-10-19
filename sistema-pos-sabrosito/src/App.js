@@ -64,6 +64,7 @@ export default function App() {
   const [pedido, setPedido] = useState([]);
   const [tipoPedido, setTipoPedido] = useState("mesa");
   const [numeroMesa, setNumeroMesa] = useState("");
+  const [totalDelDia, setTotalDelDia] = useState(0);
   const [mostrarTicket, setMostrarTicket] = useState(false);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(categorias[0].nombre);
   const [guardando, setGuardando] = useState(false);
@@ -73,6 +74,7 @@ export default function App() {
     if (!esAndroid()) {
       console.warn("Diseñado para Android — algunas funciones pueden variar en escritorio.");
     }
+    obtenerTotalDelDia();
   }, []);
 
   const agregarProducto = (producto) => {
@@ -87,6 +89,24 @@ export default function App() {
       setPedido((prev) => [...prev, { ...producto, cantidad: 1 }]);
     }
   };
+
+  const obtenerTotalDelDia = async () => {
+  const hoy = new Date().toISOString().slice(0, 10);
+
+  const { data, error } = await supabase
+    .from("pedidos")
+    .select("total, fecha")
+    .gte("fecha", `${hoy}T00:00:00`)
+    .lte("fecha", `${hoy}T23:59:59`);
+
+  if (error) {
+    console.error("Error al obtener total del día:", error.message);
+    return;
+  }
+
+  const total = data.reduce((sum, pedido) => sum + pedido.total, 0);
+  setTotalDelDia(total);
+};
 
   const eliminarProducto = (id) => {
     setPedido((prev) => prev.filter((item) => item.id !== id));
@@ -103,6 +123,8 @@ export default function App() {
     setMensajeGuardado("Guardando pedido...");
 
     try {
+      const total = pedido.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+
       const { data, error } = await supabase.from("pedidos").insert([
         {
           tipo: tipoPedido,
@@ -164,6 +186,8 @@ export default function App() {
 
 // Ya no imprimimos automáticamente
   console.log("✅ Pedido guardado. Esperando que el usuario imprima con RAWBT.");
+  
+  obtenerTotalDelDia();
 
     setTimeout(() => {
       setPedido([]);
@@ -296,6 +320,9 @@ export default function App() {
           </ul>
 
           <h3 style={{ textAlign: "center" }}>Total: Bs {total}</h3>
+          <h2 style={{ textAlign: "center", marginTop: "10px", color: "#582821ff" }}>
+            Total vendido hoy: Bs {totalDelDia.toFixed(2)}
+          </h2>
 
           {mensajeGuardado && <p style={{ textAlign: "center" }}>{mensajeGuardado}</p>}
 
