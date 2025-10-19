@@ -129,6 +129,7 @@ export default function App() {
 
   let numeroPedido = parseInt(localStorage.getItem("numeroPedido") || "1");
   localStorage.setItem("numeroPedido", numeroPedido + 1);
+
   const generarTextoTicket = () => {
     let texto = "\x1B\x61\x01"; // centrar
     texto += "\x1B\x46\x01"; // Negrilla ON
@@ -300,6 +301,24 @@ export default function App() {
           <button onClick={confirmarPedido} style={botonConfirmar} disabled={guardando}>
             {guardando ? "Guardando..." : "Confirmar e imprimir ticket"}
           </button>
+          <button
+  onClick={() => {
+    localStorage.setItem("numeroPedido", "1");
+    alert("Contador reiniciado. El próximo pedido será N° 1");
+  }}
+  style={{
+    width: "100%",
+    padding: "12px",
+    backgroundColor: "#444",
+    color: "white",
+    fontSize: "16px",
+    border: "none",
+    borderRadius: "10px",
+    marginTop: "10px",
+  }}
+>
+  Reiniciar contador de pedidos
+</button>
 
         </div>
       ) : (
