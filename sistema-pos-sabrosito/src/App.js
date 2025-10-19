@@ -23,7 +23,7 @@ export default function App() {
         { id: 7, nombre: "Super económico", precio: 10 },
         { id: 8, nombre: "Económico", precio: 16 },
         { id: 9, nombre: "1/4", precio: 28 },
-        { id: 10, nombre: "1/2", precio: 50 }
+        { id: 10, nombre: "1/2", precio: 50 },
       ],
     },
     {
@@ -93,8 +93,6 @@ export default function App() {
   };
 
   const total = pedido.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
-  const idsSodas = categorias.find(cat => cat.nombre === "Sodas")?.productos.map(p => p.id) || [];
-  const soloSodas = pedido.length > 0 && pedido.every(item => idsSodas.includes(item.id));
 
   const guardarPedidoEnSupabase = async () => {
     if (pedido.length === 0) {
@@ -315,10 +313,7 @@ export default function App() {
           <p>¡Gracias por su compra!</p>
 
           <a
-            href={
-              `rawbt:print?text=${codificarParaRawBT(generarTextoTicket())}`+
-              (soloSodas ? "" : `\n\n${codificarParaRawBT(generarTextoTicket())}` )
-            }
+            href={`rawbt:print?text=${codificarParaRawBT(generarTextoTicket())}`}
             style={{
               display: "inline-block",
               marginTop: "20px",
