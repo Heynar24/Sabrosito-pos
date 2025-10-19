@@ -127,15 +127,18 @@ export default function App() {
     }
   };
 
+  const [numeroPedidoLocal, setNumeroPedidoLocal] = useState(null);
+
   let numeroPedido = parseInt(localStorage.getItem("numeroPedido") || "1");
-  localStorage.setItem("numeroPedido", numeroPedido + 1);
+  setNumeroPedidoLocal(numeroPedido); // lo usamos en el ticket
+  localStorage.setItem("numeroPedido", numeroPedido + 1); // lo subimos para el siguiente
 
   const generarTextoTicket = () => {
     let texto = "\x1B\x61\x01"; // centrar
     texto += "\x1B\x46\x01"; // Negrilla ON
     texto += "\x1B\x21\x31"; // Formato grande
     texto += "POLLOS EL SABROSITO\n";
-    texto += `Pedido N° ${numeroPedido}\n`;
+    texto += `Pedido N° ${numeroPedidoLocal}\n`;
     texto += "\x1B\x46\x00"; // Negrilla OFF
     texto += "\x1B\x21\x00"; //vuelve al texto normal
     texto += "\x1B\x61\x00"; //aliniamiento a la izquierda
