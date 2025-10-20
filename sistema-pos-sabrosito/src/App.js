@@ -154,8 +154,8 @@ export default function App() {
   const [numeroPedidoLocal, setNumeroPedidoLocal] = useState(null);
   const generarTextoTicket = () => {
     let texto = "\x1B\x61\x01"; // centrar
-    texto += "\x1B\x21\x20"; // Negrilla ON
-    texto += "\x1B\x46\x01"; // Formato grande
+    texto += "\x1B\x46\x01"; // Negrilla ON
+    texto += "\x1B\x21\x31"; // Formato grande
     texto += "POLLOS EL SABROSITO\n";
     texto += `Pedido N° ${numeroPedidoLocal}\n`;
     texto += "\x1B\x46\x00"; // Negrilla OFF
