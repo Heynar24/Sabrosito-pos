@@ -197,7 +197,7 @@ export default function App() {
       setTipoPedido("mesa");
       setMostrarTicket(false);
       setMensajeGuardado("Pedido enviado e impresora activada.");
-    }, 2500);
+    }, 8000);
   };
 
   const contenedor = {
