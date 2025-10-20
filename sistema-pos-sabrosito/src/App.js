@@ -63,6 +63,7 @@ export default function App() {
 
   const [pedido, setPedido] = useState([]);
   const [tipoPedido, setTipoPedido] = useState("mesa");
+  const [tipoPago, setTipoPago] = useState("efectivo");
   const [numeroMesa, setNumeroMesa] = useState("");
   const [totalDelDia, setTotalDelDia] = useState(0);
   const [mostrarTicket, setMostrarTicket] = useState(false);
@@ -132,6 +133,7 @@ export default function App() {
           productos: pedido,
           total: total,
           fecha: new Date().toISOString(),
+          pago: tipoPago,
         },
       ]);
 
@@ -164,6 +166,7 @@ export default function App() {
     texto += "----------------------\n";
     texto += `Fecha: ${new Date().toLocaleString()}\n`;
     texto += `Tipo: ${tipoPedido === "mesa" ? `Mesa ${numeroMesa || "-"}` : "Para llevar"}\n`;
+    texto += `Pago: ${tipoPago === "qr" ? "QR" : "Efectivo"}\n`;
     texto += "----------------------\n";
     pedido.forEach((item) => {
       texto += `${item.nombre} x${item.cantidad} = Bs ${item.precio * item.cantidad}\n`;
@@ -276,6 +279,18 @@ export default function App() {
               <option value="mesa">En mesa</option>
               <option value="llevar">Para llevar</option>
             </select>
+
+            <div style={{ marginTop: "10px" }}>
+  <label>Tipo de pago: </label>
+  <select
+    value={tipoPago}
+    onChange={(e) => setTipoPago(e.target.value)}
+    style={{ padding: "8px", marginLeft: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
+  >
+    <option value="efectivo">Efectivo</option>
+    <option value="qr">QR</option>
+  </select>
+</div>
 
             {tipoPedido === "mesa" && (
               <div style={{ marginTop: "10px" }}>
