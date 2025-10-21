@@ -9,21 +9,21 @@ export default function App() {
     {
       nombre: "Pollo a la leña",
       productos: [
-        { id: 1, nombre: "Económico con fideo", precio: 18 },
-        { id: 2, nombre: "Económico sin fideo", precio: 16 },
-        { id: 3, nombre: "1/4 pierna", precio: 28 },
-        { id: 4, nombre: "1/4 pecho", precio: 30 },
-        { id: 5, nombre: "1/2 pollo", precio: 50 },
-        { id: 6, nombre: "Pollo entero", precio: 100 },
+        { id: 1, nombre: "Económico con fideo a la leña", precio: 18 },
+        { id: 2, nombre: "Económico sin fideo a la leña", precio: 16 },
+        { id: 3, nombre: "1/4 pierna a la leña", precio: 28 },
+        { id: 4, nombre: "1/4 pecho a la leña", precio: 30 },
+        { id: 5, nombre: "1/2 pollo a la leña", precio: 50 },
+        { id: 6, nombre: "Pollo entero a la leña", precio: 100 },
       ],
     },
     {
       nombre: "Pollo a la broaster",
       productos: [
-        { id: 7, nombre: "Super económico", precio: 10 },
-        { id: 8, nombre: "Económico", precio: 16 },
-        { id: 9, nombre: "1/4", precio: 28 },
-        { id: 10, nombre: "1/2", precio: 50 },
+        { id: 7, nombre: "Super económico broaster", precio: 10 },
+        { id: 8, nombre: "Económico broaster", precio: 16 },
+        { id: 9, nombre: "1/4 broaster", precio: 28 },
+        { id: 10, nombre: "1/2 broaster", precio: 50 },
       ],
     },
     {
