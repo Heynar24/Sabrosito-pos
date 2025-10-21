@@ -64,7 +64,7 @@ export default function App() {
   const [pedido, setPedido] = useState([]);
   const [tipoPedido, setTipoPedido] = useState("mesa");
   const [tipoPago, setTipoPago] = useState("efectivo");
-  const [numeroMesa, setNumeroMesa] = useState("");
+  const [nombreCliente, setNombreCliente] = useState("");
   const [totalDelDia, setTotalDelDia] = useState(0);
   const [mostrarTicket, setMostrarTicket] = useState(false);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(categorias[0].nombre);
@@ -129,7 +129,7 @@ export default function App() {
       const { data, error } = await supabase.from("pedidos").insert([
         {
           tipo: tipoPedido,
-          mesa: tipoPedido === "mesa" ? numeroMesa || null : null,
+          cliente: nombreCliente || null,
           productos: pedido,
           total: total,
           fecha: new Date().toISOString(),
@@ -165,7 +165,7 @@ export default function App() {
     texto += "Doble via La Guardia,km20\n";
     texto += "----------------------\n";
     texto += `Fecha: ${new Date().toLocaleString()}\n`;
-    texto += `Tipo: ${tipoPedido === "mesa" ? `Mesa ${numeroMesa || "-"}` : "Para llevar"}\n`;
+    texto += `Cliente: ${numeroMesa || "Sin nombre"}\n`;
     texto += `Pago: ${tipoPago === "qr" ? "QR" : "Efectivo"}\n`;
     texto += "----------------------\n";
     pedido.forEach((item) => {
@@ -196,7 +196,7 @@ export default function App() {
 
     setTimeout(() => {
       setPedido([]);
-      setNumeroMesa("");
+      setNombreCliente("");
       setTipoPedido("mesa");
       setMostrarTicket(false);
       setMensajeGuardado("Pedido enviado e impresora activada.");
@@ -292,19 +292,17 @@ export default function App() {
   </select>
 </div>
 
-            {tipoPedido === "mesa" && (
-              <div style={{ marginTop: "10px" }}>
-                <label>N° Mesa: </label>
-                <input
-                  type="text"
-                  value={numeroMesa}
-                  onChange={(e) => setNumeroMesa(e.target.value)}
-                  style={{ marginLeft: "8px", padding: "6px", borderRadius: "6px", border: "1px solid #ccc", width: "80px", textAlign: "center" }}
-                />
-              </div>
-            )}
+<div style={{ marginTop: "10px" }}>
+  <label>Nombre cliente: </label>
+  <input
+    type="text"
+    value={nombreCliente}
+    onChange={(e) => setNombreCliente(e.target.value)}
+    placeholder="Ej: Jhon Alvarez"
+    style={{ marginLeft: "8px", padding: "6px", borderRadius: "6px", border: "1px solid #ccc", width: "200px" }}
+  />
+</div>
           </div>
-
           {categorias
             .filter((cat) => cat.nombre === categoriaSeleccionada)
             .map((categoria) => (
@@ -370,7 +368,7 @@ export default function App() {
         <div style={{ fontFamily: "monospace", textAlign: "center" }}>
           <h2>🧾 Ticket de pedido</h2>
           <p>Fecha: {new Date().toLocaleString()}</p>
-          <p>Tipo: {tipoPedido === "mesa" ? `Mesa ${numeroMesa || "-"}` : "Para llevar"}</p>
+          <p>Cliente: {nombreCliente || "Sin nombre"}</p>
           <hr />
           <ul style={{ listStyle: "none", padding: 0 }}>
             {pedido.map((item) => (
