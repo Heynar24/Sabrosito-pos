@@ -165,7 +165,8 @@ export default function App() {
     texto += "Doble via La Guardia,km20\n";
     texto += "----------------------\n";
     texto += `Fecha: ${new Date().toLocaleString()}\n`;
-    texto += ` Cliente: ${nombreCliente || "Sin nombre"}\n`;
+    texto += `Tipo: ${tipoPedido === "mesa" ? "Mesa" : "Para llevar"}\n`;
+    texto += `Cliente: ${nombreCliente || "Sin nombre"}\n`;
     texto += `Pago: ${tipoPago === "qr" ? "QR" : "Efectivo"}\n`;
     texto += "----------------------\n";
     pedido.forEach((item) => {
