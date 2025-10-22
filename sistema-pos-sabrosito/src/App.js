@@ -165,7 +165,7 @@ export default function App() {
     texto += "Doble via La Guardia,km20\n";
     texto += "----------------------\n";
     texto += `Fecha: ${new Date().toLocaleString()}\n`;
-    texto += `Cliente: ${numeroMesa || "Sin nombre"}\n`;
+    texto += ` Cliente: ${nombreCliente || "Sin nombre"}\n`;
     texto += `Pago: ${tipoPago === "qr" ? "QR" : "Efectivo"}\n`;
     texto += "----------------------\n";
     pedido.forEach((item) => {
@@ -173,7 +173,7 @@ export default function App() {
     });
     texto += "----------------------\n";
     texto += `TOTAL: Bs ${total}\n`;
-    texto += "¡Gracias por su compra!\n";
+    texto += "¡Gracias por su compra!\n"; 
 
     return texto;
   };
@@ -399,7 +399,7 @@ export default function App() {
           <button
   onClick={() => {
     setPedido([]);
-    setNumeroMesa("");
+    setNombreCliente("");
     setTipoPedido("mesa");
     setMostrarTicket(false);
     setMensajeGuardado("Pedido enviado e impresora activada.");
