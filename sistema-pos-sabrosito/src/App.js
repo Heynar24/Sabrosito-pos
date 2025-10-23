@@ -21,42 +21,43 @@ export default function App() {
       nombre: "Pollo a la broaster",
       productos: [
         { id: 7, nombre: "Super económico broaster", precio: 10 },
-        { id: 8, nombre: "Económico broaster", precio: 16 },
-        { id: 9, nombre: "1/4 broaster", precio: 28 },
-        { id: 10, nombre: "1/2 broaster", precio: 50 },
+        { id: 8, nombre: "Económico broaster con fideo", precio: 18 },
+        { id: 9, nombre: "Económico broaster", precio: 16 },
+        { id: 10, nombre: "1/4 broaster", precio: 28 },
+        { id: 11, nombre: "1/2 broaster", precio: 50 },
       ],
     },
     {
       nombre: "Salchipapas",
-      productos: [{ id: 10, nombre: "Salchipapa clásica", precio: 15 }],
+      productos: [{ id: 12, nombre: "Salchipapa clásica", precio: 15 }],
     },
     {
       nombre: "Porciones",
       productos: [
-        { id: 11, nombre: "Porción de fideo", precio: 8 },
-        { id: 12, nombre: "Porción de papa", precio: 8 },
-        { id: 13, nombre: "Porción de arroz", precio: 8 },
+        { id: 13, nombre: "Porción de fideo", precio: 8 },
+        { id: 14, nombre: "Porción de papa", precio: 8 },
+        { id: 15, nombre: "Porción de arroz", precio: 8 },
       ],
     },
     {
       nombre: "Sodas",
       productos: [
-        { id: 14, nombre: "Mini", precio: 3 },
-        { id: 15, nombre: "Pop popular", precio: 4 },
-        { id: 16, nombre: "Soda peque", precio: 5 },
-        { id: 17, nombre: "Jugo Tropi", precio: 7 },
-        { id: 18, nombre: "Popular Fanta", precio: 8 },
-        { id: 19, nombre: "Popular CocaCola", precio: 8 },
-        { id: 20, nombre: "Mendocina", precio: 9 },
-        { id: 21, nombre: "Pepsi", precio: 10 },
-        { id: 22, nombre: "Jugo del Valle", precio: 12 },
-        { id: 23, nombre: "Aqua-rius 2L", precio: 16 },
-        { id: 24, nombre: "Cabaña", precio: 16 },
-        { id: 25, nombre: "Jugo Pura Vida", precio: 16 },
-        { id: 26, nombre: "Simba", precio: 16 },
-        { id: 27, nombre: "Coca Cola 2L", precio: 19 },
-        { id: 28, nombre: "Fanta 2L", precio: 19 },
-        { id: 29, nombre: "Coca Cola 3L", precio: 23 },
+        { id: 15, nombre: "Mini", precio: 3 },
+        { id: 16, nombre: "Pop popular", precio: 4 },
+        { id: 17, nombre: "Soda peque", precio: 5 },
+        { id: 18, nombre: "Jugo Tropi", precio: 7 },
+        { id: 19, nombre: "Popular Fanta", precio: 8 },
+        { id: 20, nombre: "Popular CocaCola", precio: 8 },
+        { id: 21, nombre: "Mendocina", precio: 9 },
+        { id: 22, nombre: "Pepsi", precio: 10 },
+        { id: 23, nombre: "Jugo del Valle", precio: 12 },
+        { id: 24, nombre: "Aqua-rius 2L", precio: 16 },
+        { id: 25, nombre: "Cabaña", precio: 16 },
+        { id: 26, nombre: "Jugo Pura Vida", precio: 16 },
+        { id: 27, nombre: "Simba", precio: 16 },
+        { id: 28, nombre: "Coca Cola 2L", precio: 19 },
+        { id: 29, nombre: "Fanta 2L", precio: 19 },
+        { id: 30, nombre: "Coca Cola 3L", precio: 23 },
       ],
     },
   ];
@@ -201,7 +202,7 @@ export default function App() {
       setTipoPedido("mesa");
       setMostrarTicket(false);
       setMensajeGuardado("Pedido enviado e impresora activada.");
-    }, 8000);
+    }, 20000); // 20 segundos para volver al menú
   };
 
   const contenedor = {
