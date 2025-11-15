@@ -359,7 +359,7 @@ export default function App() {
     fontSize: "16px",
     border: "none",
     borderRadius: "10px",
-    marginTop: "10px",
+    marginTop: "10px", 
   }}
 >
   Reiniciar contador de pedidos
@@ -367,9 +367,9 @@ export default function App() {
 
         </div>
       ) : (
-        <div style={{ fontFamily: "monospace", textAlign: "center" }}>
+        <div style={{ fontFamily: "monospace", textAlign: "center" }}> 
           <h2>🧾 Ticket de pedido</h2>
-          <p>Fecha: {new Date().toLocaleString()}</p>
+          <p>Fecha: {new Date().toLocaleString()}</p> 
           <p>Cliente: {nombreCliente || "Sin nombre"}</p>
           <hr />
           <ul style={{ listStyle: "none", padding: 0 }}>
